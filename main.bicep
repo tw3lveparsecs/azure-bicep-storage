@@ -69,3 +69,6 @@ resource blobServices 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01
     }
   }
 }
+
+output name string = storage.name
+output id string = storage.id
