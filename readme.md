@@ -35,3 +35,23 @@ module storage './main.bicep' = {
   }
 }
 ```
+### Example 3 - Storage account with file share and diagnostics
+``` bicep
+param deploymentName string = 'storage${utcNow()}'
+
+module storage 'main.bicep' = {
+  name: deploymentName
+  params: {
+    storageAccountName: 'mystorageaccount'
+    storageSku: 'Standard_LRS'
+    storageKind: 'StorageV2'
+    storageTier: 'Hot'
+    deleteRetentionPolicy: 7
+    enableFileShare: true
+    fileShareName: 'myshare'
+    fileShareTier: 'Hot'
+    enableDiagnostics: true
+    diagnosticLogAnalyticsWorkspaceId: 'myLogAnalyticsWorkspaceResourceId'
+  }
+}
+```
