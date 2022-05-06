@@ -5,12 +5,12 @@ You can optionally configure file shares, storage queues, diagnostics and a reso
 
 ## Usage
 
-### Example 1 - Storage account with encryption enabled
+### Example 1 - Storage account with encryption enabled and a container
 ``` bicep
 param deploymentName string = 'storage${utcNow()}'
 param location string = resourceGroup().location
 
-module storage './main.bicep' = {
+module storage './storage.bicep' = {
   name: deploymentName
   params: {
     storageAccountName: 'mystorageaccount'
@@ -19,6 +19,12 @@ module storage './main.bicep' = {
     storageKind: 'StorageV2'
     storageTier: 'Hot'
     deleteRetentionPolicy: 7
+    containers: [
+      {
+        containerName: 'container1'
+        publicAccess: 'None'
+      }
+    ]
   }
 }
 ```
@@ -28,7 +34,7 @@ module storage './main.bicep' = {
 param deploymentName string = 'storage${utcNow()}'
 param location string = resourceGroup().location
 
-module storage './main.bicep' = {
+module storage './storage.bicep' = {
   name: deploymentName
   params: {
     storageAccountName: 'mystorageaccount'

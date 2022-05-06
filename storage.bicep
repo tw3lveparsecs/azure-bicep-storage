@@ -42,6 +42,13 @@ param deleteRetentionPolicy int
 @description('Enable blob encryption at rest.')
 param blobEncryptionEnabled bool = true
 
+@description('Containers to create in the storage account.')
+@metadata({
+  containerName: 'Container name.'
+  publicAccess: 'Specifies whether data in the container may be accessed publicly and the level of access. Accepted values: None, Blob, Container.'
+})
+param containers array = []
+
 @description('Files shares to create in the storage account.')
 @metadata({
   fileShareName: 'File share name.'
@@ -113,6 +120,14 @@ resource blobServices 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01
     }
   }
 }
+
+resource blobContainers 'Microsoft.Storage/storageAccounts/blobServices/containers@2021-08-01' = [for container in containers: {
+  name: container.containerName
+  parent: blobServices
+  properties: {
+    publicAccess: container.publicAccess
+  }
+}]
 
 resource fileServices 'Microsoft.Storage/storageAccounts/fileServices@2021-08-01' = if (!empty(fileShares)) {
   parent: storage
