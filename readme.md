@@ -55,7 +55,7 @@ param location string = resourceGroup().location
 module storage 'storage.bicep' = {
   name: deploymentName
   params: {
-    storageAccountName: 'ajbteststorage01'
+    storageAccountName: 'mystorageaccount'
     location: location
     storageSku: 'Standard_LRS'
     storageKind: 'StorageV2'
@@ -83,7 +83,7 @@ param location string = resourceGroup().location
 module storage 'storage.bicep' = {
   name: deploymentName
   params: {
-    storageAccountName: 'ajbteststorage01'
+    storageAccountName: 'mystorageaccount'
     location: location
     storageSku: 'Standard_LRS'
     storageKind: 'StorageV2'
