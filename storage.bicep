@@ -34,6 +34,13 @@ param storageKind string
 ])
 param storageTier string
 
+@description('Allow or disallow public network access to Storage Account.')
+@allowed([
+  'Enabled'
+  'Disabled'
+])
+param publicNetworkAccess string = 'Enabled'
+
 @description('Amount of days the soft deleted data is stored and available for recovery.')
 @minValue(1)
 @maxValue(365)
@@ -64,6 +71,31 @@ param fileShares array = []
 })
 param queues array = []
 
+@description('Rule definitions governing the Storage network access.')
+@metadata({
+  bypass: 'Specifies whether traffic is bypassed for Logging/Metrics/AzureServices. Possible values are any combination of Logging, Metrics, AzureServices.'
+  defaultAction: 'Specifies the default action of allow or deny when no other rules match. Accepted values: "Allow" or "Deny".'
+  ipRules: [
+    {
+      action: 'Allow'
+      value: 'IPv4 address or CIDR range'
+    }
+  ]
+  virtualNetworkRules: [
+    {
+      action: 'The action of virtual network rule.'
+      id: 'Full resource id of a vnet subnet.'
+    }
+  ]
+  resourceAccessRules: [
+    {
+      resourceId: '	Resource Id.'
+      tenantId: 'Tenant Id.'
+    }
+  ]
+})
+param networkRuleSet object = {}
+
 @allowed([
   'CanNotDelete'
   'NotSpecified'
@@ -90,7 +122,7 @@ param diagnosticEventHubName string = ''
 var lockName = toLower('${storage.name}-${resourcelock}-lck')
 var diagnosticsName = '${storage.name}-dgs'
 
-resource storage 'Microsoft.Storage/storageAccounts@2021-04-01' = {
+resource storage 'Microsoft.Storage/storageAccounts@2021-09-01' = {
   name: storageAccountName
   location: location
   sku: {
@@ -107,6 +139,8 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-04-01' = {
         }
       }
     }
+    networkAcls: networkRuleSet
+    publicNetworkAccess: publicNetworkAccess
   }
 }
 
