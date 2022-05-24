@@ -96,6 +96,9 @@ param queues array = []
 })
 param networkRuleSet object = {}
 
+@description('Enables hierarchical namespace for storage account.')
+param hierarchicalNamespaceEnabled bool = false
+
 @allowed([
   'CanNotDelete'
   'NotSpecified'
@@ -141,6 +144,7 @@ resource storage 'Microsoft.Storage/storageAccounts@2021-09-01' = {
     }
     networkAcls: networkRuleSet
     publicNetworkAccess: publicNetworkAccess
+    isHnsEnabled: hierarchicalNamespaceEnabled
   }
 }
 
@@ -149,7 +153,7 @@ resource blobServices 'Microsoft.Storage/storageAccounts/blobServices@2021-04-01
   name: 'default'
   properties: {
     deleteRetentionPolicy: {
-      enabled: true
+      enabled: hierarchicalNamespaceEnabled ? false : true
       days: deleteRetentionPolicy
     }
   }
